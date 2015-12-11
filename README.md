@@ -11,6 +11,7 @@ However, to help transcribing voice recording to text easier, the main propose o
 ### Requirements
 * Python 3
 * Speech API token of Microsoft Project Oxford
+* Bing Voice Recognition token
 
 ### Tokens
 Save your API and tokens in `tokens_sample.py` and rename it to `tokens.py`
