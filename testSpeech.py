@@ -54,10 +54,10 @@ def get_token():
 # Read the binary from wave file
 #gary's poo
 workPath = os.getcwd() # get current work space
+arg1 = ''
 if len(sys.argv) >= 2 :
 	workPath += "/" + sys.argv[1] # append data folder
-else :
-	workPath += "/G7_V2V" # append data folder
+	arg1 = sys.argv[1]
 
 sound_list = os.listdir(workPath) # list all sound in folder
 index = 0
@@ -81,6 +81,6 @@ for sound in sound_list: # run through all sound
 	else:
 		all_strings += (sound + ' ERROR!!! \n')
 
-with open('result.txt', 'w+') as file:
+with open('./' + arg1 + '/' + arg1 + '.txt', 'w+') as file:
 	file.write(all_strings)
 file.close()
