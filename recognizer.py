@@ -1,13 +1,7 @@
-import http.client, urllib.parse, json, os, sys
-import wave,csv,time
-import contextlib
+import http.client, urllib.parse, json, os, sys, wave, csv, time, contextlib
 import xml.etree.cElementTree as ET
 from tokens import *
 
-#thanks for the sample: https://social.msdn.microsoft.com/Forums/sqlserver/en-US/138ad8a0-6e61-4929-84b4-0336290652d6/mvp-how-to-use-project-oxford-voice-recognition-api-rest-with-python?forum=mlapi
-#Note: Sign up at http://www.projectoxford.ai to get a subscription key.
-#Search for Speech APIs from Azure Marketplace.
-#Use the subscription key as Client secret below.
 clientId = "kage-test-speech"
 clientSecret = oxford_speech_api
 ttsHost = "https://speech.platform.bing.com"
@@ -85,7 +79,6 @@ def send_request(body):
 	return (returnStr,response.status)
 
 # Read the binary from wave file
-#gary's poo
 workPath = os.getcwd() # get current work space
 arg1 = ''
 if len(sys.argv) >= 2 :
@@ -93,9 +86,6 @@ if len(sys.argv) >= 2 :
 	arg1 = sys.argv[1]
 
 sound_list = os.listdir(workPath) # list all sound in folder
-index = 0
-
-
 
 audio_offset = 0.0
 elapsed_total_time = 31.0 # for first time used
@@ -108,7 +98,7 @@ for sound in sound_list: # run through all sound
 		continue
 
 	if sound.lower().endswith(('.wav')) == False:
-		all_data.append([sound,'Error format'])
+		all_data.append([sound,'Wrong voice file format'])
 		continue
 	
 	if (elapsed_total_time / 30) >= 1 :
@@ -131,7 +121,6 @@ for sound in sound_list: # run through all sound
 	end_time = audio_offset = start_time + duration
 	sound_output_arr.append("%0.2f" % start_time)
 	sound_output_arr.append("%0.2f" % end_time)
-	index += 1
 	
 	# Open audio to read
 	f = open(workPath + '/' + sound,'rb')
@@ -139,6 +128,7 @@ for sound in sound_list: # run through all sound
 	    body = f.read();
 	finally:
 	    f.close()
+
 	speechStr, status_code = send_request(body)
 	print(status_code)
 	if (status_code == 200) == False:
@@ -152,6 +142,3 @@ for sound in sound_list: # run through all sound
 	print ('\t',"%0.2f" % elapsed_total_time)
 	all_data.append(sound_output_arr)
 export_csv(all_data,arg1+'.csv')
-# with open('./' + arg1 + '/' + arg1 + '.txt', 'w+') as file:
-# 	file.write(all_strings)
-# file.close()

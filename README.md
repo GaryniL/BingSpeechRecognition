@@ -24,3 +24,27 @@ Usage:
 `python synthesizer.py "Never gonna give you up, never gonna let you down."` 
 
 Output: `synthesized.wav`
+
+### Speech to Text Recognition
+
+Since Bing Voice Recognition service can't recognition our voice recoding file at once, we should separate the file to mutiple parts first. We suggest the tool [Audacity](http://sourceforge.net/projects/audacity/) for track editing. 
+
+#### Separate Voice Recording File
+
+* Open your file with Audicity and choose "Analyze → Silence Finder..."
+
+![audacity1.jpg](images/audacity1.jpg)
+
+* Change the settings, then press "OK"
+
+![audacity2.jpg](images/audacity2.jpg) 
+
+* Click "File → Export Multiple..."
+
+![audacity3.jpg](images/audacity3.jpg)
+
+* Check export format and name files as the following settings, then export all files to same directory
+
+![audacity4.jpg](images/audacity4.jpg)
+
+**NOTICE** : Since the token of Bing Speech Recognit
