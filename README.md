@@ -1,7 +1,5 @@
 # BingSpeechRecognition
 
----
-
 ### About
 This project includes two parts: 
 
@@ -50,4 +48,12 @@ Since Bing Voice Recognition service can't recognition our voice recoding file a
 
 ![audacity4.jpg](images/audacity4.jpg)
 
-<!--**NOTICE** : Since the token of Bing Speech Recognit-->
+#### Usage
+
+Put all .wav files in same directory, then use `python recognizer.py FOLDERNAME` to generate results.
+
+#### Results
+
+The output of recognizer.py is a .csv file which includes all sentences in your voice recoding files. Each row represent the corresponding output of the voice recording. If the recoginition failed, the output file also represents the reason and error code.
+
+![result.jpg](images/result.jpg)
