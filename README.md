@@ -18,6 +18,7 @@ However, to help transcribing voice recording to text easier, the main propose o
 Save your API and tokens in `tokens_sample.py` and rename it to `tokens.py`
 
 ### Text to Speech Conversion
+
 In this part, we use Speech API of Microsoft Project Oxford to synthesize the voice from text inputs. You can [subscribe a free plan](https://www.projectoxford.ai/Subscription/Index?productId=/products/54f0354049c3f70a50e79b7e) of Speech APIs, which includes 5000 free API calls per month.
 
 Usage: 
@@ -26,6 +27,8 @@ Usage:
 Output: `synthesized.wav`
 
 ### Speech to Text Recognition
+
+In this part, we should get [Bing Voice Recognition](https://datamarket.azure.com/dataset/bing/speechrecognition) token, like Speech API, you can call 5000 times for free per month. Then you can access your keys from [this page](https://datamarket.azure.com/account/keys)
 
 Since Bing Voice Recognition service can't recognition our voice recoding file at once, we should separate the file to mutiple parts first. We suggest the tool [Audacity](http://sourceforge.net/projects/audacity/) for track editing. 
 
@@ -47,4 +50,4 @@ Since Bing Voice Recognition service can't recognition our voice recoding file a
 
 ![audacity4.jpg](images/audacity4.jpg)
 
-**NOTICE** : Since the token of Bing Speech Recognit
+<!--**NOTICE** : Since the token of Bing Speech Recognit-->
