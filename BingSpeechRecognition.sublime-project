@@ -4,6 +4,9 @@
 		{
 			"follow_symlinks": true,
 			"path": ".",
+			"folder_exclude_patterns": [
+				"__pycache__",
+			],
 			"file_exclude_patterns": [
 				"*.wav",
 				"*.m4a",
