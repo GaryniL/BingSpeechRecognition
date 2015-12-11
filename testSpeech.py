@@ -9,7 +9,7 @@ from tokens import *
 #Search for Speech APIs from Azure Marketplace.
 #Use the subscription key as Client secret below.
 clientId = "kage-test-speech"
-clientSecret = oxford_computer_speech
+clientSecret = oxford_speech_api
 ttsHost = "https://speech.platform.bing.com"
 all_strings = ''
 all_data = []

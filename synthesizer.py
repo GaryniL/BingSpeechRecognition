@@ -3,7 +3,7 @@ from tokens import *
 
 if len(sys.argv) == 2:
 	text = sys.argv[1]
-	api = pyoxford.speech("kage-test-speech", oxford_computer_speech)
+	api = pyoxford.speech("kage-test-speech", oxford_speech_api)
 
 	# text to speech (.wav file)
 	binary = api.text_to_speech(text)
