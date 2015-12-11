@@ -81,7 +81,7 @@ def send_request(body):
 	if response.status is 200:
 		returnStr = extract_lexical(response_data)
 	else:
-		returnStr = (sound + ' ERROR!!! '+response.status)
+		returnStr = (sound + ' ERROR!!! '+ str(response.status))
 	return returnStr
 
 # Read the binary from wave file
@@ -106,6 +106,11 @@ all_data.append(['Filename','duration','start','end','Speech'])
 for sound in sound_list: # run through all sound
 	if sound == '.DS_Store' :
 		continue
+
+	if sound.lower().endswith(('.wav')) == False:
+		all_data.append([sound,'Error format'])
+		continue
+	
 	if (elapsed_total_time / 30) >= 1 :
 		# Get access token
 		print('========= ','Token Renew' ,' =========')
@@ -135,12 +140,12 @@ for sound in sound_list: # run through all sound
 	finally:
 	    f.close()
 
-	sound_output_arr.append(send_request(body))
+	# sound_output_arr.append(send_request(body))
 	elapsed_end = time.time()
 	elapsed_total_time = elapsed_total_time + (elapsed_end - elapsed_start) 
 	print ('\t',"%0.2f" % elapsed_total_time)
 	all_data.append(sound_output_arr)
-export_csv(all_data,'test.csv')
+export_csv(all_data,arg1+'.csv')
 # with open('./' + arg1 + '/' + arg1 + '.txt', 'w+') as file:
 # 	file.write(all_strings)
 # file.close()
