@@ -45,7 +45,7 @@ def get_response(body, headers):
 	conn = http.client.HTTPSConnection("speech.platform.bing.com")
 	conn.request("POST", "/recognize/query?scenarios=ulm&appid=D4D52672-91D7-4C74-8AD8-42B1D98141A5&locale=en-US&device.os=wp7&version=3.0&format=xml&requestid=1d4b6030-9099-11e0-91e4-0800200c9a66&instanceid=1d4b6030-9099-11e0-91e4-0800200c9a66", body, headers)
 	response = conn.getresponse()
-	print(response.status, response.reason)
+	print('\t',response.status, response.reason, end="\t")
 	# conn.close()
 	return response
 
@@ -60,7 +60,8 @@ def get_token():
 	conn = http.client.HTTPSConnection(AccessTokenHost)
 	conn.request("POST", path, params, headers)
 	response = conn.getresponse()
-	# print(response.status, response.reason)
+	if response.status != 200 :
+		print('[Token] ',response.status, response.reason)
 
 	data = response.read()
 	conn.close()
@@ -94,22 +95,32 @@ if len(sys.argv) >= 2 :
 sound_list = os.listdir(workPath) # list all sound in folder
 index = 0
 
-# Get access token
-access_token = ''
-access_token = get_token()
+
 
 audio_offset = 0.0
+elapsed_total_time = 31.0 # for first time used
+access_token = ''
+
+print('Filename\tClip duration\tRequest Status\tElapsed time')
 all_data.append(['Filename','duration','start','end','Speech'])
 for sound in sound_list: # run through all sound
 	if sound == '.DS_Store' :
 		continue
+	if (elapsed_total_time / 30) >= 1 :
+		# Get access token
+		print('========= ','Token Renew' ,' =========')
+		access_token = ''
+		access_token = get_token()
+		elapsed_total_time = 0.0
+
+	elapsed_start = time.time()
 	sound_output_arr = []
 
-	print(sound, end="\t")
+	print(sound, end="\t") # print sound name
 	sound_output_arr.append(sound)
 
 	duration = calWavDuration(workPath + '/' + sound)
-	print(duration, end="\t")
+	print("%0.2f" % duration, end="\t")# print sound duration
 	sound_output_arr.append("%0.2f" % duration)
 	start_time = audio_offset
 	end_time = audio_offset = start_time + duration
@@ -125,6 +136,9 @@ for sound in sound_list: # run through all sound
 	    f.close()
 
 	sound_output_arr.append(send_request(body))
+	elapsed_end = time.time()
+	elapsed_total_time = elapsed_total_time + (elapsed_end - elapsed_start) 
+	print ('\t',"%0.2f" % elapsed_total_time)
 	all_data.append(sound_output_arr)
 export_csv(all_data,'test.csv')
 # with open('./' + arg1 + '/' + arg1 + '.txt', 'w+') as file:
