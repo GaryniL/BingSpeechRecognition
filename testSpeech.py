@@ -1,4 +1,6 @@
 import http.client, urllib.parse, json, os, sys
+import wave,csv,time
+import contextlib
 import xml.etree.cElementTree as ET
 from tokens import *
 
@@ -10,6 +12,18 @@ clientId = "kage-test-speech"
 clientSecret = oxford_computer_speech
 ttsHost = "https://speech.platform.bing.com"
 all_strings = ''
+all_data = []
+
+def export_csv(csvdata, file_name):
+	f = open(file_name, "w")
+	w = csv.writer(f, lineterminator = '\n')
+	for item in csvdata:
+		w.writerow(item)
+	f.close()
+
+class prettyfloat(float):
+    def __repr__(self):
+        return "%0.2f" % self
 
 def extract_lexical(text_body):
 	# print (text_body)
@@ -18,6 +32,13 @@ def extract_lexical(text_body):
 	for elem in root.iter('results'):
 		for elem2 in elem[0].iter('lexical'):
 			return elem2.text + '\n'
+
+def calWavDuration(wav_path):
+	with contextlib.closing(wave.open(wav_path,'r')) as wf:
+	    frames = wf.getnframes()
+	    rate = wf.getframerate()
+	    duration = frames / float(rate)
+	    return duration
 
 def get_response(body, headers):
 	#Connect to server to recognize the wave binary
@@ -51,6 +72,17 @@ def get_token():
 	access_token = ddata['access_token']
 	return access_token
 
+def send_request(body):
+	headers = {"Content-type": "audio/wav; samplerate=8000",
+				"Authorization": "Bearer " + access_token}
+	response = get_response(body, headers)
+	response_data = response.read()
+	if response.status is 200:
+		returnStr = extract_lexical(response_data)
+	else:
+		returnStr = (sound + ' ERROR!!! '+response.status)
+	return returnStr
+
 # Read the binary from wave file
 #gary's poo
 workPath = os.getcwd() # get current work space
@@ -61,26 +93,40 @@ if len(sys.argv) >= 2 :
 
 sound_list = os.listdir(workPath) # list all sound in folder
 index = 0
-for sound in sound_list: # run through all sound 
-	print (sound)
-	access_token = ''
-	access_token = get_token()
+
+# Get access token
+access_token = ''
+access_token = get_token()
+
+audio_offset = 0.0
+all_data.append(['Filename','duration','start','end','Speech'])
+for sound in sound_list: # run through all sound
+	if sound == '.DS_Store' :
+		continue
+	sound_output_arr = []
+
+	print(sound, end="\t")
+	sound_output_arr.append(sound)
+
+	duration = calWavDuration(workPath + '/' + sound)
+	print(duration, end="\t")
+	sound_output_arr.append("%0.2f" % duration)
+	start_time = audio_offset
+	end_time = audio_offset = start_time + duration
+	sound_output_arr.append("%0.2f" % start_time)
+	sound_output_arr.append("%0.2f" % end_time)
 	index += 1
+	
+	# Open audio to read
 	f = open(workPath + '/' + sound,'rb')
 	try:
 	    body = f.read();
 	finally:
 	    f.close()
 
-	headers = {"Content-type": "audio/wav; samplerate=8000",
-				"Authorization": "Bearer " + access_token}
-	response = get_response(body, headers)
-	data = response.read()
-	if response.status is 200:
-		all_strings += extract_lexical(data)
-	else:
-		all_strings += (sound + ' ERROR!!! \n')
-
-with open('./' + arg1 + '/' + arg1 + '.txt', 'w+') as file:
-	file.write(all_strings)
-file.close()
+	sound_output_arr.append(send_request(body))
+	all_data.append(sound_output_arr)
+export_csv(all_data,'test.csv')
+# with open('./' + arg1 + '/' + arg1 + '.txt', 'w+') as file:
+# 	file.write(all_strings)
+# file.close()
