@@ -82,7 +82,7 @@ def send_request(body):
 		returnStr = extract_lexical(response_data)
 	else:
 		returnStr = (sound + ' ERROR!!! '+ str(response.status))
-	return returnStr
+	return (returnStr,response.status)
 
 # Read the binary from wave file
 #gary's poo
@@ -139,8 +139,14 @@ for sound in sound_list: # run through all sound
 	    body = f.read();
 	finally:
 	    f.close()
-
-	# sound_output_arr.append(send_request(body))
+	speechStr, status_code = send_request(body)
+	print(status_code)
+	if (status_code == 200) == False:
+		print('========= ','Token Renew' ,' =========')
+		access_token = ''
+		access_token = get_token()
+		elapsed_total_time = 0.0
+	sound_output_arr.append(speechStr)
 	elapsed_end = time.time()
 	elapsed_total_time = elapsed_total_time + (elapsed_end - elapsed_start) 
 	print ('\t',"%0.2f" % elapsed_total_time)
