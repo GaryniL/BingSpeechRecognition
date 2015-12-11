@@ -50,10 +50,14 @@ Since Bing Voice Recognition service can't recognition our voice recoding file a
 
 #### Usage
 
-Put all .wav files in same directory, then use `python recognizer.py FOLDERNAME` to generate results.
+Put all .wav files in same directory, then use `python recognizer.py FOLDERNAME` to generate results. Yes, it will try to recognize each sentense in your voice files.
 
 #### Results
 
 The output of recognizer.py is a .csv file which includes all sentences in your voice recoding files. Each row represent the corresponding output of the voice recording. If the recoginition failed, the output file also represents the reason and error code.
 
 ![result.jpg](images/result.jpg)
+
+### License
+
+MIT License
