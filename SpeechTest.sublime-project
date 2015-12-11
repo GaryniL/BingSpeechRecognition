@@ -1,0 +1,14 @@
+{
+	"folders":
+	[
+		{
+			"follow_symlinks": true,
+			"path": ".",
+			"file_exclude_patterns": [
+				"*.wav",
+				"*.m4a",
+				"*.sublime-workspace",
+			],
+		}
+	]
+}

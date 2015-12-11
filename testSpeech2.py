@@ -1,7 +1,7 @@
 import pyoxford
 from tokens import *
 
-text = "star"
+text = "hello are you come from Chicago and have one thousand U.S. dollars per month"
 api = pyoxford.speech("kage-test-speech", oxford_computer_speech)
 
 # text to speech (.wav file)

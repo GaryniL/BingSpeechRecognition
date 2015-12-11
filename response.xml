@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='us-ascii'?>
+<speechbox-root>
+  <version>3.0</version>
+  <header>
+    <status>success</status>
+    <scenario>ulm</scenario>
+    <name>hey how's it going I'm ok ok and so we are supposed to talk about a fake rotwein right alright so do you wanna go for a store I go first I go for it ok so there's a few things I was thinking about so if you groovin with the &lt;profanity&gt;fuck&lt;/profanity&gt; are you run into you are strong winds and thunder storms</name>
+    <lexical>hey how's it going i'm ok ok and so we are supposed to talk about a fake rotwein right alright so do you wanna go for a store i go first i go for it ok so there's a few things i was thinking about so if you groovin with the &lt;profanity&gt;fuck&lt;/profanity&gt; are you run into you are strong winds and thunder storms</lexical>
+    <properties>
+      <property name="requestid">2c916150-b035-4076-8a5f-0b1cddfc78de</property>
+      <property name="HIGHCONF">1</property>
+    </properties>
+  </header>
+  <results>
+    <result>
+      <scenario>ulm</scenario>
+      <name>hey how's it going I'm ok ok and so we are supposed to talk about a fake rotwein right alright so do you wanna go for a store I go first I go for it ok so there's a few things I was thinking about so if you groovin with the &lt;profanity&gt;fuck&lt;/profanity&gt; are you run into you are strong winds and thunder storms</name>
+      <lexical>hey how's it going i'm ok ok and so we are supposed to talk about a fake rotwein right alright so do you wanna go for a store i go first i go for it ok so there's a few things i was thinking about so if you groovin with the &lt;profanity&gt;fuck&lt;/profanity&gt; are you run into you are strong winds and thunder storms</lexical>
+      <confidence>0.625144362</confidence>
+      <properties>
+        <property name="HIGHCONF">1</property>
+      </properties>
+    </result>
+  </results>
+</speechbox-root>
