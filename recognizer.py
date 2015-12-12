@@ -64,7 +64,10 @@ def get_token():
 
 	#decode the object from json
 	ddata=json.loads(accesstoken)
-	access_token = ddata['access_token']
+	if 'access_token' in ddata:
+		access_token = ddata['access_token']
+	else:
+		access_token = ''
 	return access_token
 
 def send_request(body):
@@ -130,12 +133,14 @@ for sound in sound_list: # run through all sound
 	    f.close()
 
 	speechStr, status_code = send_request(body)
-	print(status_code)
+	
 	if (status_code == 200) == False:
-		print('========= ','Token Renew' ,' =========')
+		print('Token Renew', end="\t")
 		access_token = ''
 		access_token = get_token()
 		elapsed_total_time = 0.0
+		speechStr, status_code = send_request(body)
+		
 	sound_output_arr.append(speechStr)
 	elapsed_end = time.time()
 	elapsed_total_time = elapsed_total_time + (elapsed_end - elapsed_start) 
