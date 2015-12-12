@@ -110,7 +110,10 @@ sound_list = os.listdir(workPath) # list all sound in folder
 audio_offset = 0.0
 elapsed_total_time = token_renew_time+1 # for first time used
 access_token = ''
-csv_data = import_csv(arg1+'.csv')
+
+if os.path.exists(arg1+'.csv'):
+	csv_data = import_csv(arg1+'.csv')
+
 
 
 print('Filename\tClip duration\tRequest Status\tElapsed time')
@@ -126,18 +129,21 @@ for sound in sound_list: # run through all sound
 		continue
 	this_status = 0
 	index = index + 1
+
 	# Check CSV if this file already process
-	this_prev_data = csv_data[index]
-	if this_prev_data[4] == '1' :
-		# success process before
-		print(this_prev_data[0],'\t',this_prev_data[1],'\t\t','OK','\t\t','skip')
-		# sound_output_arr.append(this_prev_data[0]) # file name
-		# sound_output_arr.append(this_prev_data[1]) # duration
-		# sound_output_arr.append(this_prev_data[2]) # start_time
-		# sound_output_arr.append(this_prev_data[3]) # end_time
-		# sound_output_arr.append(this_prev_data[4]) # this_status
-		all_data.append(this_prev_data)
-		continue
+	if 'csv_data' in globals():
+		this_prev_data = csv_data[index]
+		if this_prev_data[4] == '1' :
+			# success process before
+			print(this_prev_data[0],'\t',this_prev_data[1],'\t\t','OK','\t\t','skip')
+			audio_offset = float(this_prev_data[3])
+			# sound_output_arr.append(this_prev_data[0]) # file name
+			# sound_output_arr.append(this_prev_data[1]) # duration
+			# sound_output_arr.append(this_prev_data[2]) # start_time
+			# sound_output_arr.append(this_prev_data[3]) # end_time
+			# sound_output_arr.append(this_prev_data[4]) # this_status
+			all_data.append(this_prev_data)
+			continue
 
 
 	# Fast mode / renew token 30 sec
