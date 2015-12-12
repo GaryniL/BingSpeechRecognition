@@ -1,12 +1,14 @@
 import http.client, urllib.parse, json, os, sys, wave, csv, time, contextlib
 import xml.etree.cElementTree as ET
 from tokens import *
+from configs import *
 
 clientId = "kage-test-speech"
 clientSecret = oxford_speech_api
 ttsHost = "https://speech.platform.bing.com"
 all_strings = ''
 all_data = []
+
 
 def export_csv(csvdata, file_name):
 	f = open(file_name, "w")
@@ -88,10 +90,20 @@ if len(sys.argv) >= 2 :
 	workPath += "/" + sys.argv[1] # append data folder
 	arg1 = sys.argv[1]
 
+# determine fast or slow mode
+arg2 = 1
+if len(sys.argv) >= 3 :
+	if sys.argv[2].lower() == 'slow' :
+		print('[Slow mode]')
+		arg2 = 0
+	else :
+		print('[Fast mode]')
+		arg2 = 1
+
 sound_list = os.listdir(workPath) # list all sound in folder
 
 audio_offset = 0.0
-elapsed_total_time = 31.0 # for first time used
+elapsed_total_time = token_renew_time+1 # for first time used
 access_token = ''
 
 print('Filename\tClip duration\tRequest Status\tElapsed time')
@@ -104,9 +116,16 @@ for sound in sound_list: # run through all sound
 		all_data.append([sound,'Wrong voice file format'])
 		continue
 	
-	if (elapsed_total_time / 30) >= 1 :
+	# Fast mode / renew token 30 sec
+	if (elapsed_total_time / token_renew_time) >= 1 and arg2 == 1 :
 		# Get access token
 		print('========= ','Token Renew' ,' =========')
+		access_token = ''
+		access_token = get_token()
+		elapsed_total_time = 0.0
+
+	# Slow mode / renew token every time
+	if arg2 == 0 :
 		access_token = ''
 		access_token = get_token()
 		elapsed_total_time = 0.0
@@ -135,12 +154,13 @@ for sound in sound_list: # run through all sound
 	speechStr, status_code = send_request(body)
 	
 	if (status_code == 200) == False:
-		print('Token Renew', end="\t")
-		access_token = ''
-		access_token = get_token()
-		elapsed_total_time = 0.0
-		speechStr, status_code = send_request(body)
-		
+		for i in range(retryTimes):
+			print('Token Renew', str(i), end="\t")
+			access_token = ''
+			access_token = get_token()
+			elapsed_total_time = 0.0
+			speechStr, status_code = send_request(body)
+
 	sound_output_arr.append(speechStr)
 	elapsed_end = time.time()
 	elapsed_total_time = elapsed_total_time + (elapsed_end - elapsed_start) 
