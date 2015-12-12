@@ -131,7 +131,7 @@ for sound in sound_list: # run through all sound
 		elapsed_total_time = 0.0
 
 	# Slow mode / renew token every time
-	if arg2 == 0 :
+	else if arg2 == 0 :
 		access_token = ''
 		access_token = get_token()
 		elapsed_total_time = 0.0
