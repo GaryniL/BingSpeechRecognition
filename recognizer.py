@@ -11,9 +11,9 @@ all_data = []
 
 def import_csv(file_name):
 	f = open(file_name, 'r')  
-	for row in csv.reader(f, lineterminator = '\n'):  
-	    print(row)
+	csv_data = list(csv.reader(f, lineterminator = '\n'))
 	f.close()
+	return csv_data
 
 def export_csv(csvdata, file_name):
 	f = open(file_name, "w")
@@ -110,9 +110,13 @@ sound_list = os.listdir(workPath) # list all sound in folder
 audio_offset = 0.0
 elapsed_total_time = token_renew_time+1 # for first time used
 access_token = ''
+csv_data = import_csv(arg1+'.csv')
+
 
 print('Filename\tClip duration\tRequest Status\tElapsed time')
 all_data.append(['Filename','duration','start','end','Status','Speech'])
+
+index = 0
 for sound in sound_list: # run through all sound
 	if sound == '.DS_Store' :
 		continue
@@ -121,6 +125,20 @@ for sound in sound_list: # run through all sound
 		all_data.append([sound,'Wrong voice file format'])
 		continue
 	this_status = 0
+	index = index + 1
+	# Check CSV if this file already process
+	this_prev_data = csv_data[index]
+	if this_prev_data[4] == '1' :
+		# success process before
+		print(this_prev_data[0],'\t',this_prev_data[1],'\t\t','OK','\t\t','skip')
+		# sound_output_arr.append(this_prev_data[0]) # file name
+		# sound_output_arr.append(this_prev_data[1]) # duration
+		# sound_output_arr.append(this_prev_data[2]) # start_time
+		# sound_output_arr.append(this_prev_data[3]) # end_time
+		# sound_output_arr.append(this_prev_data[4]) # this_status
+		all_data.append(this_prev_data)
+		continue
+
 
 	# Fast mode / renew token 30 sec
 	if (elapsed_total_time / token_renew_time) >= 1 and arg2 == 1 :
@@ -131,7 +149,7 @@ for sound in sound_list: # run through all sound
 		elapsed_total_time = 0.0
 
 	# Slow mode / renew token every time
-	else if arg2 == 0 :
+	elif arg2 == 0 :
 		access_token = ''
 		access_token = get_token()
 		elapsed_total_time = 0.0
@@ -168,12 +186,13 @@ for sound in sound_list: # run through all sound
 			elapsed_total_time = 0.0
 			speechStr, status_code = send_request(body)
 
+	# Check success or not
 	if status_code == 200 :
 		this_status = 1
 	else :
 		this_status = 0
+
 	sound_output_arr.append(this_status)
-	print('this_status',str(this_status),end="\t")
 
 	sound_output_arr.append(speechStr)
 	elapsed_end = time.time()
