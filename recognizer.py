@@ -9,6 +9,11 @@ ttsHost = "https://speech.platform.bing.com"
 all_strings = ''
 all_data = []
 
+def import_csv(file_name):
+	f = open(file_name, 'r')  
+	for row in csv.reader(f, lineterminator = '\n'):  
+	    print(row)
+	f.close()
 
 def export_csv(csvdata, file_name):
 	f = open(file_name, "w")
@@ -107,7 +112,7 @@ elapsed_total_time = token_renew_time+1 # for first time used
 access_token = ''
 
 print('Filename\tClip duration\tRequest Status\tElapsed time')
-all_data.append(['Filename','duration','start','end','Speech'])
+all_data.append(['Filename','duration','start','end','Status','Speech'])
 for sound in sound_list: # run through all sound
 	if sound == '.DS_Store' :
 		continue
@@ -115,7 +120,8 @@ for sound in sound_list: # run through all sound
 	if sound.lower().endswith(('.wav')) == False:
 		all_data.append([sound,'Wrong voice file format'])
 		continue
-	
+	this_status = 0
+
 	# Fast mode / renew token 30 sec
 	if (elapsed_total_time / token_renew_time) >= 1 and arg2 == 1 :
 		# Get access token
@@ -151,15 +157,23 @@ for sound in sound_list: # run through all sound
 	finally:
 	    f.close()
 
+	status_code = 200
 	speechStr, status_code = send_request(body)
 	
 	if (status_code == 200) == False:
 		for i in range(retryTimes):
-			print('Token Renew', str(i), end="\t")
+			print('[Token]', str(i), end=" ")
 			access_token = ''
 			access_token = get_token()
 			elapsed_total_time = 0.0
 			speechStr, status_code = send_request(body)
+
+	if status_code == 200 :
+		this_status = 1
+	else :
+		this_status = 0
+	sound_output_arr.append(this_status)
+	print('this_status',str(this_status),end="\t")
 
 	sound_output_arr.append(speechStr)
 	elapsed_end = time.time()
